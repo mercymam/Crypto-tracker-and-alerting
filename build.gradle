@@ -1,0 +1,57 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version "2.0.21"
+    id "org.jetbrains.kotlin.plugin.allopen" version "2.0.21"
+    id 'io.quarkus'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation 'io.quarkus:quarkus-rest-kotlin'
+    implementation 'io.quarkus:quarkus-rest-client-kotlin-serialization'
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+
+    implementation 'io.quarkus:quarkus-kotlin' // Kotlin support
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8' // Kotlin standard library
+    implementation 'io.quarkus:quarkus-arc' // Dependency injection support
+    implementation 'io.quarkus:quarkus-kafka-client'   
+//    implementation 'io.quarkus:quarkus-resteasy' // RESTEasy support
+    implementation 'io.quarkus:quarkus-vertx' // For Vert.x
+    implementation 'io.quarkus:quarkus-hibernate-orm-panache-kotlin'
+    implementation 'io.quarkus:quarkus-rest-client'
+    implementation 'io.quarkus:quarkus-jdbc-postgresql'
+
+    testImplementation 'io.quarkus:quarkus-junit5' // JUnit 5 support for testing
+    testImplementation 'io.rest-assured:rest-assured' // For testing REST APIs
+}
+
+group 'org.acme'
+version '1.0.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+test {
+    systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+}
+
+allOpen {
+    annotation("jakarta.ws.rs.Path") // Ensure these are the correct imports for JAX-RS
+    annotation("jakarta.enterprise.context.ApplicationScoped")
+    annotation("jakarta.persistence.Entity")
+    annotation("io.quarkus.test.junit.QuarkusTest")
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_21
+    kotlinOptions.javaParameters = true
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_21
+}
